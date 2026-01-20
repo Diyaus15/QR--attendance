@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Faculty QR Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+</head>
+<body>
+
+<h2>Faculty – Generate Attendance QR</h2>
+
+<label>Select Period:</label>
+<select id="period">
+  <option value="Period 1">Period 1</option>
+  <option value="Period 2">Period 2</option>
+  <option value="Period 3">Period 3</option>
+</select>
+
+<br><br>
+
+<button onclick="generateQR()">Generate QR</button>
+
+<br><br>
+
+<div id="qrcode"></div>
+<p id="timer"></p>
+
+<script>
+let time = 120;
+let interval;
+
+function generateQR() {
+  clearInterval(interval);
+  time = 120;
+
+  document.getElementById("qrcode").innerHTML = "";
+
+  const period = document.getElementById("period").value;
+  const token = Date.now();
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: `student.html?token=${token}&period=${period}`,
+    width: 200,
+    height: 200
+  });
+
+  interval = setInterval(() => {
+    document.getElementById("timer").innerText =
+      "QR expires in " + time + " seconds";
+    time--;
+
+    if (time < 0) {
+      clearInterval(interval);
+      document.getElementById("qrcode").innerHTML = "QR Expired";
+      document.getElementById("timer").innerText = "";
+    }
+  }, 1000);
+}
+</script>
+
+</body>
+</html>
